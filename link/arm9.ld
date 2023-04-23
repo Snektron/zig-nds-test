@@ -5,5 +5,16 @@ SECTIONS {
         KEEP(*(.text))
     }
 
-    # TODO: data, rodata, bss, etc
+    .rodata.arm9 : {
+        KEEP(*(.rodata))
+    }
+
+    .data.arm9 : {
+        KEEP(*(.data))
+    }
+
+    .bss.arm9 : {
+        *(COMMON)
+        KEEP(*(.bss))
+    }
 }

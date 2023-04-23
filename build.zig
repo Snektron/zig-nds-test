@@ -43,5 +43,12 @@ pub fn build(b: *std.Build) void {
     nds.linker_script = .{ .path = "link/nds.ld" };
     nds.addObject(nds7);
     nds.addObject(nds9);
-    b.installArtifact(nds);
+
+    const rom = nds.addObjCopy(.{
+        .basename = "zig-nds-test",
+        .format = .bin,
+        .only_section = ".nds",
+    });
+    const rom_install = b.addInstallFile(rom.getOutputSource(), "bin/zig-nds-test.nds");
+    b.getInstallStep().dependOn(&rom_install.step);
 }
