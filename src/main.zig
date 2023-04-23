@@ -4,7 +4,7 @@ const builtin = @import("builtin");
 const mem_base = 0x02000000;
 const mem_limit = mem_base + 4 * 1024 * 1024;
 
-const vram = @intToPtr([*]volatile u32, 0x06800000);
+const vram = @intToPtr([*]volatile u16, 0x06800000);
 
 const io = struct {
     const dispcnt = @intToPtr(*volatile u32, 0x4000000);
@@ -39,10 +39,12 @@ fn main() noreturn {
     io.dispcnt.* = 0x00020000;
     io.vramcnt_a.* = 0x80;
 
+    var j: usize = 0;
     while (true) {
-        for (0..30000) |i| {
-            vram[i] ^= 0xFF;
+        for (0..256 * 192) |i| {
+            vram[i] = @truncate(u16, i + j);
         }
+        j +%= 1;
     }
 }
 
