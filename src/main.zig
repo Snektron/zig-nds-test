@@ -1,6 +1,12 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
+pub fn panic(msg: []const u8, stack_trace: ?*std.builtin.StackTrace, _: ?usize) noreturn {
+    _ = msg;
+    _ = stack_trace;
+    while (true) {}
+}
+
 fn start_arm7() callconv(.C) noreturn {
     while (true) {
         @intToPtr(*volatile u8, 1).* = 0;
