@@ -7,12 +7,19 @@ MEMORY {
 
 SECTIONS {
     .text : {
+        mem_base = .;
         KEEP(*(.header))
+        # TODO: Can we set an absolute value here rather than 4K?
+        # TODO: Does this need to be 8K?
         . = ALIGN(4K);
+
         _arm7_start = .;
+        _arm7_offset = . - mem_base;
         KEEP(*(.text.arm7))
         _arm7_end = .;
+
         _arm9_start = .;
+        _arm9_offset = . - mem_base;
         KEEP(*(.text.arm9))
         _arm9_end = .;
     } > RAM =0
