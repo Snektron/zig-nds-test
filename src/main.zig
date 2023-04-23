@@ -1,6 +1,9 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
+const mem_base = 0x02000000;
+const mem_limit = mem_base + 4 * 1024 * 1024;
+
 pub fn panic(msg: []const u8, stack_trace: ?*std.builtin.StackTrace, _: ?usize) noreturn {
     _ = msg;
     _ = stack_trace;
@@ -9,13 +12,20 @@ pub fn panic(msg: []const u8, stack_trace: ?*std.builtin.StackTrace, _: ?usize) 
 
 fn start_arm7() callconv(.C) noreturn {
     while (true) {
-        @intToPtr(*volatile u8, 1).* = 0;
     }
 }
 
 fn start_arm9() callconv(.C) noreturn {
-    while (true) {
-    }
+    asm volatile(
+        ""
+        :
+        : [stack] "{sp}" (mem_limit)
+    );
+    main();
+}
+
+fn main() noreturn {
+    while (true) {}
 }
 
 comptime {
